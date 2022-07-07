@@ -49,18 +49,30 @@ bookSchema.methods.enhanceTitle = function () {
 	if (this.numberOfPages >= 200) {
 		this.title = this.title + ' (long book)';
 	}
-}
+};
 
 bookSchema.statics.findShortEnglishBooks = function () {
-	return this.where('language').equals('english').where('numberOfPages').lte(200);
-}
+	return this.where('language')
+		.equals('english')
+		.where('numberOfPages')
+		.lte(200);
+};
 
 bookSchema.statics.findShortBooksByLanguage = function (language) {
-	return this.where('language').equals(language).where('numberOfPages').lte(200);
-}
+	return this.where('language')
+		.equals(language)
+		.where('numberOfPages')
+		.lte(200);
+};
 
 bookSchema.query.byLanguage = function (language) {
 	return this.where('language').equals(language);
-}
+};
+
+bookSchema.virtual('bookInfoText').get(function () {
+	return `${this.title}, ${this.numberOfPages} pages: ${this.description}`;
+});
+
+bookSchema.set('toJSON', { virtuals: true });
 
 export const Book = mongoose.model('book', bookSchema);
