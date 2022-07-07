@@ -30,7 +30,7 @@ app.post('/book', async (req, res) => {
 			book,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message, invalidBook: book});
+		res.status(400).json({ error: err.message, invalidBook: book });
 	}
 });
 
@@ -43,11 +43,31 @@ app.get('/book', async (req, res) => {
 });
 
 app.get('/books-by-language/:language', async (req, res) => {
-    const language = req.params.language;
-    const books = await Book.where('language').equals(language).sort('title').populate('relatedBook');
-    books.forEach(book => console.log(book.enhanceTitle()));
+	const language = req.params.language;
+	const books = await Book.where('language')
+		.equals(language)
+		.sort('title')
+		.populate('relatedBook');
+	books.forEach((book) => console.log(book.enhanceTitle()));
 	res.status(200).json({
 		message: `fetched all books written in ${language}`,
+		books,
+	});
+});
+
+app.get('/short-english-books', async (req, res) => {
+	const books = await Book.findShortEnglishBooks();
+	res.status(200).json({
+		message: `fetched all short books in English`,
+		books,
+	});
+});
+
+app.get('/short-books-by-language/:language', async (req, res) => {
+	const language = req.params.language;
+	const books = await Book.findShortBooksByLanguage(language);
+	res.status(200).json({
+		message: `fetched all short books in ${language}`,
 		books,
 	});
 });
