@@ -7,11 +7,12 @@ const authorSchema = new mongoose.Schema({
 	email: {
 		type: String,
 		lowercase: true,
-        validate: {
-            validator: v => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v),
-            message: "{VALUE} is not a valid email."
-        }	
-	}
+		validate: {
+			validator: (v) =>
+				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v),
+			message: '{VALUE} is not a valid email.',
+		},
+	},
 });
 
 const bookSchema = new mongoose.Schema({
@@ -20,23 +21,26 @@ const bookSchema = new mongoose.Schema({
 		required: true,
 		minLength: 5,
 		maxLength: 255,
-		trim: true
+		trim: true,
 	},
 	description: String,
 	numberOfPages: {
 		type: Number,
 		min: 10,
 		max: 2000,
-		required: true
+		required: true,
 	},
 	language: String,
 	imageUrl: String,
 	buyUrl: String,
 	whenCreated: {
 		type: Date,
-		default: () => Date.now()
+		default: () => Date.now(),
 	},
-	relatedBook: mongoose.SchemaTypes.ObjectId,
+	relatedBook: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'book',
+	},
 	topics: [String],
 	author: authorSchema,
 });
