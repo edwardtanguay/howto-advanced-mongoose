@@ -104,9 +104,13 @@ app.put('/book/:id', async (req, res) => {
 
 app.patch('/book/:id', async (req, res) => {
 	const id = req.params.id;
-	const oldBook = await Book.find({ _id: id });
-	await Book.updateOne({ _id: id }, { $set: { ...req.body } });
-	const newBook = await Book.find({ _id: id });
+	const oldBook = await Book.findOne({ _id: id });
+	const book = await Book.findOne({ _id: id });
+    Object.entries(req.body).forEach(kv => {
+        book[kv[0]] = kv[1];
+    }) 
+    book.save(); 
+	const newBook = await Book.findOne({ _id: id });
 	res.status(200).json({
 		message: 'patched book with id=' + id,
 		oldBook,
