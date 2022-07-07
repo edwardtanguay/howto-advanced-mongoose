@@ -59,4 +59,8 @@ bookSchema.statics.findShortBooksByLanguage = function (language) {
 	return this.where('language').equals(language).where('numberOfPages').lte(200);
 }
 
+bookSchema.query.byLanguage = function (language) {
+	return this.where('language').equals(language);
+}
+
 export const Book = mongoose.model('book', bookSchema);
